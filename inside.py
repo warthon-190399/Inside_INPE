@@ -148,8 +148,11 @@ view_state = pdk.ViewState(
 deck = pdk.Deck(
     layers=[layer],
     initial_view_state=view_state,
-    tooltip={"text": "fake text"}
-)
+    tooltip={
+        "html": "<b>District:</b> {DISTRITO}<br/><b>Crime Count:</b> {NUMERO_DE_INGRESOS}<br/><b>Crime Type:</b> {DELITO_GENERICO}",
+        "style": {"color": "white"}
+    }
+)  
 
 # Render the visualization and save as an HTML file
 deck.to_html("h3_hexagon_layer.html")
