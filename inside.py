@@ -65,11 +65,12 @@ fig_choro = px.choropleth_mapbox(geojson_df,
                            locations='id',
                            featureidkey='properties.id',
                            mapbox_style='carto-darkmatter',
-                           zoom=8,
+                           zoom=8.85,
                            center={'lat':-12.041377,
                                    'lon': -77.039402},
-                           opacity=0.2,
-                           hover_data=['distrito']
+                           opacity=0.1,
+                           hover_data=['distrito'],
+                           height=600
 )
 
 crim_choro = px.scatter_mapbox(crimpob_lc,
@@ -78,7 +79,9 @@ crim_choro = px.scatter_mapbox(crimpob_lc,
                             hover_name='DISTRITO',
                             color_discrete_sequence=["#06ad03"]
 )
-
+fig_choro.update_layout(
+    margin={'r': 0, 't': 0, 'b': 0, 'l': 0}
+)
 fig_choro.add_trace(crim_choro.data[0])
 
 #5.3.- Mapbox
@@ -86,19 +89,19 @@ fig_map = px.scatter_mapbox(crimpob_lc,
                         lat='LATITUD',
                         lon='LONGITUD',
                         mapbox_style='carto-darkmatter',
-                        zoom=8, #ciudad
+                        zoom=9, #ciudad
                         hover_name='DISTRITO',
                         color='DELITO_AGRUPADO',
                         size='NUMERO_DE_INGRESOS',
                         center={'lat':-12.041377,
                                 'lon': -77.039402},
                         color_discrete_sequence=px.colors.qualitative.Dark24_r,
-                        size_max=20 #limita el tamaño del punto
+                        size_max=20
                         )
-fig_map.update_layout(margin={'r':0,'t':0,'l':0,'b':0}, #elimina el marco
+fig_map.update_layout(margin={'r':0,'t':0,'l':0,'b':0},
                       legend=dict(orientation='h',
                       x= 0.5,
-                      y=-0.6,
+                      y=-0.3,
                       yanchor="bottom",
                       xanchor="center",
                       traceorder="normal",
@@ -114,18 +117,21 @@ fig = px.density_mapbox(crimpob_lc,
                         lat='LATITUD',
                         lon='LONGITUD',
                         mapbox_style='carto-darkmatter',
-                        color_continuous_scale='inferno',
-                        zoom=8,
+                        color_continuous_scale='electric',
+                        zoom=9,
                         z='NUMERO_DE_INGRESOS',  # Utiliza GRUPOS_DE_INGRESOS como la variable de intensidad
-                        radius=10,
+                        radius=15,
                         opacity=0.9,
                         center={
                             'lat': -12.055710,
                             'lon': -77.032658
-                        })
+                        },
+                        height=500
+                        )
 fig.update_layout(
-    margin={'r': 0, 't': 0, 'b': 0, 'l': 0}
-)
+    margin={'r': 0, 't': 0, 'b': 0, 'l': 0},
+    coloraxis_colorbar=None
+    )
 
 #5.5.- Hexagon
 
@@ -148,7 +154,7 @@ layer = pdk.Layer(
 view_state = pdk.ViewState(
     latitude=-12.041377,
     longitude=-77.039402,
-    zoom=10,
+    zoom=9.3,
     bearing=0,
     pitch=30  # Pitch or tilt of the map
 )
@@ -208,11 +214,12 @@ fig_DBSCAN = px.choropleth_mapbox(geojson_df,
                            featureidkey='properties.id',
                            #color='color',
                            mapbox_style='carto-darkmatter',
-                           zoom=8,
+                           zoom=8.85,
                            center={'lat':-12.041377,
                                    'lon': -77.039402},
-                           opacity=0.2,
-                           hover_data=['distrito']
+                           opacity=0.1,
+                           hover_data=['distrito'],
+                           height=600
                           )
 
 incidentes_cluster = px.scatter_mapbox(rep_points,
@@ -231,6 +238,10 @@ incidentes_cluster = px.scatter_mapbox(rep_points,
                                       )
 
 fig_DBSCAN.add_trace(incidentes_cluster.data[0])
+fig_DBSCAN.update_layout(
+    margin={'r': 0, 't': 0, 'b': 0, 'l': 0}
+)
+
 
 
 #8.- Layout
