@@ -12,13 +12,13 @@ import json
 import h3
 import warnings
 warnings.filterwarnings("ignore")
-
+#%%
 #2.- Importamos el dataset
 
 crimpob = pd.read_csv('crimenes_2021.csv',
                 index_col='ID'
                 )
-
+#%%
 #3.- Limpiamos datos
 
 crimpob_lc = crimpob[(crimpob['DEPARTAMENTO'].isin(['LIMA', 'CALLAO'])) &
@@ -26,8 +26,16 @@ crimpob_lc = crimpob[(crimpob['DEPARTAMENTO'].isin(['LIMA', 'CALLAO'])) &
                       (crimpob['DEPARTAMENTO'] == 'CALLAO'))]
 
 crimpob_lc.dropna()
-
+#%%
 #4.- EDA
+
+frec_del = crimpob_lc["DELITO_GENERICO"].value_counts()
+prin_del = frec_del.head(4).index.tolist()
+crimpob_lc["DELITO_AGRUPADO"] = crimpob_lc["DELITO_GENERICO"].apply(lambda x:x if x in prin_del else "Otros")
+
+#%%
+
+
 
 #5.- Geo Analisis
 
@@ -56,11 +64,11 @@ fig_choro = px.choropleth_mapbox(geojson_df,
                            geojson=distritos,
                            locations='id',
                            featureidkey='properties.id',
-                           mapbox_style='carto-positron',
+                           mapbox_style='carto-darkmatter',
                            zoom=8,
                            center={'lat':-12.041377,
                                    'lon': -77.039402},
-                           opacity=0.5,
+                           opacity=0.2,
                            hover_data=['distrito']
 )
 
@@ -68,7 +76,7 @@ crim_choro = px.scatter_mapbox(crimpob_lc,
                             lat='LATITUD',
                             lon='LONGITUD',
                             hover_name='DISTRITO',
-                            color_discrete_sequence=["red"]
+                            color_discrete_sequence=["#06ad03"]
 )
 
 fig_choro.add_trace(crim_choro.data[0])
@@ -77,25 +85,26 @@ fig_choro.add_trace(crim_choro.data[0])
 fig_map = px.scatter_mapbox(crimpob_lc,
                         lat='LATITUD',
                         lon='LONGITUD',
-                        mapbox_style='carto-positron',
+                        mapbox_style='carto-darkmatter',
                         zoom=8, #ciudad
                         hover_name='DISTRITO',
-                        color='DELITO_GENERICO',
+                        color='DELITO_AGRUPADO',
                         size='NUMERO_DE_INGRESOS',
                         center={'lat':-12.041377,
-                                   'lon': -77.039402},
+                                'lon': -77.039402},
+                        color_discrete_sequence=px.colors.qualitative.Dark24_r,
                         size_max=20 #limita el tamaño del punto
                         )
-fig_map.update_layout(margin={'r':0,'t':0,'l':0,'b':0}) #elimina el marco
-fig_map.update_layout(legend=dict(orientation='h',
-                                  x= 0.5,
-                                  y=-0.6,
-                                  yanchor="bottom",
-                                  xanchor="center",
-                                  traceorder="normal",
-                                  title="TIPO DE DELITO",
-                                  title_font=dict(size=14),
-                                  itemclick='toggleothers'
+fig_map.update_layout(margin={'r':0,'t':0,'l':0,'b':0}, #elimina el marco
+                      legend=dict(orientation='h',
+                      x= 0.5,
+                      y=-0.6,
+                      yanchor="bottom",
+                      xanchor="center",
+                      traceorder="normal",
+                      title="TIPO DE DELITO",
+                      title_font=dict(size=14),
+                      itemclick='toggleothers'
                                   )
                       )
 
@@ -104,7 +113,7 @@ fig_map.update_layout(legend=dict(orientation='h',
 fig = px.density_mapbox(crimpob_lc,
                         lat='LATITUD',
                         lon='LONGITUD',
-                        mapbox_style='carto-positron',
+                        mapbox_style='carto-darkmatter',
                         color_continuous_scale='inferno',
                         zoom=8,
                         z='NUMERO_DE_INGRESOS',  # Utiliza GRUPOS_DE_INGRESOS como la variable de intensidad
@@ -132,11 +141,10 @@ layer = pdk.Layer(
     filled=True,  # Fill hexagons with color
     extruded=False,
     get_hexagon="h3",
-    get_fill_color="[255, 255, 100, 50]",
+    get_fill_color=[255, 255, 100, 50],
     get_line_color=[255, 255, 255],
     line_width_min_pixels=2,
 )
-
 view_state = pdk.ViewState(
     latitude=-12.041377,
     longitude=-77.039402,
@@ -149,11 +157,9 @@ deck = pdk.Deck(
     layers=[layer],
     initial_view_state=view_state,
     tooltip={
-        "html": "<b>District:</b> {DISTRITO}<br/><b>Crime Count:</b> {NUMERO_DE_INGRESOS}<br/><b>Crime Type:</b> {DELITO_GENERICO}",
-        "style": {"color": "white"}
+        "html": "<b>Distrito:</b> {DISTRITO}<br/><b>Reincidencias:</b> {NUMERO_DE_INGRESOS}<br/><b>Tipo de delito:</b> {DELITO_GENERICO}",
     }
-)  
-
+)   
 # Render the visualization and save as an HTML file
 deck.to_html("h3_hexagon_layer.html")
 
@@ -201,11 +207,11 @@ fig_DBSCAN = px.choropleth_mapbox(geojson_df,
                            locations='id',
                            featureidkey='properties.id',
                            #color='color',
-                           mapbox_style='carto-positron',
+                           mapbox_style='carto-darkmatter',
                            zoom=8,
                            center={'lat':-12.041377,
                                    'lon': -77.039402},
-                           opacity=0.4,
+                           opacity=0.2,
                            hover_data=['distrito']
                           )
 
@@ -214,14 +220,14 @@ incidentes_cluster = px.scatter_mapbox(rep_points,
                                        lon="lon",
                                        hover_name="size",
                                        hover_data=["size"],
-                                       mapbox_style="carto-positron",
+                                       mapbox_style="carto-darkmatter",
                                        zoom=10,
                                        center={
                                            'lat':-12.036891,
                                            'lon':-77.026508
                                        },
                                        opacity=0.6,
-                                       color_discrete_sequence=['red']
+                                       color_discrete_sequence=['#2ee002']
                                       )
 
 fig_DBSCAN.add_trace(incidentes_cluster.data[0])
@@ -237,7 +243,7 @@ logo = st.sidebar.image("logo.png")
 
 st.sidebar.title("Opciones de visualización")
 
-mapas = ["Mapa Choropleth", "Mapa de Burbujas", "Mapa de Calor", "Mapa de Hexágonos"]
+mapas = ["Mapa de Puntos", "Mapa de Burbujas", "Mapa de Calor", "Mapa de Hexágonos"]
 selec_mapas = st.sidebar.selectbox("Escoja el mapa de su interés:", mapas)
 
 dbscan_1 = ["Modelo de Clustering DBSCAN"]
@@ -252,9 +258,9 @@ if "Modelo de Clustering DBSCAN" in selec_model:
     st.write("El algoritmo **DBSCAN** resalta las **zonas con mayor incidencia de crímenes en el mapa**. **Cada punto representa un cluster identificado por la proximidad entre los crímenes**. En otras palabras, los puntos en el mapa muestran **áreas específicas donde se concentran delitos**, y cada punto es el centro de un cluster de crímenes cercanos. Aquellas **ubicaciones con mayor densidad de puntos indican áreas con mayor actividad delictiva.**")
     st.divider()
 
-if "Mapa Choropleth" in selec_mapas:
-    st.subheader("Mapa Choropleth")
-    st.write("Un choropleth es un tipo de mapa que **utiliza colores para mostrar la variación de una variable en diferentes áreas geográficas**, como distritos. Los puntos en el gráfico de dispersión **representan crímenes en ubicaciones específicas**, y al pasar el ratón, se revela el distrito asociado a cada crimen. Este mapa **ofrece una visión instantánea de la distribución de crímenes en relación con los distritos de Lima y el Callao**.")
+if "Mapa de Puntos" in selec_mapas:
+    st.subheader("Mapa de Puntos")
+    st.write("El mapa de puntos **representa crímenes en ubicaciones específicas**, y al pasar el ratón, se revela el distrito asociado a cada crimen. Este mapa **ofrece una visión instantánea de la distribución de crímenes en relación con los distritos de Lima y el Callao**")
     st.plotly_chart(fig_choro)
     st.divider()
 
