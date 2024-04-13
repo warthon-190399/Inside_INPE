@@ -250,7 +250,7 @@ st.title("Inside INPE")
 st.write("**Inside INPE** es una aplicación de streamlit que **permite observar datos georeferenciados del lugar de procedencia de delitos reportados por la población carcelaria de la ciudad de Lima y el Callao del año 2021**. En esta aplicación usted podrá observar el lugar de procedencia aprovechando las ventajas que brinda cada estilo de mapa disponible, siendo estos, **mapa choropleth**, **mapa de burbujas**, **mapa de calor** y **mapa de hexágonos**. Además, **se implementó** un algoritmo de clusterización espacial muy popular llamado **DBSCAN**. Las opciones están habilitadas en la barra lateral.")
 st.divider()
 
-logo = st.sidebar.image("logo.png")
+logo = st.sidebar.image("logoPulseNegro.png")
 
 st.sidebar.title("Opciones de visualización")
 
