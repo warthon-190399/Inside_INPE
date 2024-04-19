@@ -2,6 +2,8 @@
 ## Descripción del Proyecto
 Inside INPE es una aplicación de análisis y visualización de datos geográficos que permite explorar la distribución espacial de crímenes reportados por la población carcelaria en la ciudad de Lima y el Callao durante el año 2021. La aplicación utiliza diversas técnicas y visualizaciones para proporcionar una comprensión más profunda de la dinámica delictiva en la región.
 
+Puedes observar el proyecto en: https://insideinpe-uzbapw25wnhqgybk8hmqxg.streamlit.app/
+
 ## Contenido del repositorio
 
 **crimenes_2021.csv**: Archivo CSV que contiene datos sobre crímenes reportados en el año 2021, con detalles sobre delitos, ubicaciones y otros atributos.
